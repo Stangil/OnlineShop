@@ -8,5 +8,6 @@ namespace ShopBackendLibrary.SqlDataAccess
 {
     public interface ISqlDataAccess
     {
+        Task<List<T>> LoadData<T>(string storedProc, string connectionName, object parameters);
     }
 }

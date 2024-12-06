@@ -1,0 +1,15 @@
+﻿@page "/newcatagory/"
+<h3>New Catagory</h3>
+
+<div class="table">
+    <form>
+        <label style="width: 100px" for="categoryName">Category Name</label>
+        <input id="categoryName" style="width: 380px" @bind-value="categoryName" />
+        <label style="width: 100px" for="categoryDescription">Category Description</label>
+        <input id="categoryDescription" style="width: 380px" @bind-value="categoryDescription" />
+    </form>
+</div>
+
+@code {
+    string categoryName = "", categoryDescription="";
+}
