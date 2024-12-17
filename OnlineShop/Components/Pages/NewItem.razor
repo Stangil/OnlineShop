@@ -1,0 +1,16 @@
+﻿@page "/newitem/"
+
+<div class="table">
+    <form>
+        <label style="width: 100px" for="itemName">Item Name</label>
+        <input id="itemName" style="width: 380px" @bind-value="itemName" />
+        <label style="width: 100px" for="itemDescription">Item Description</label>
+        <input id="itemDescription" style="width: 380px" @bind-value="itemDescription" />
+    </form>
+</div>
+
+
+@code {
+    string itemName = "", itemDescription = "";
+
+}

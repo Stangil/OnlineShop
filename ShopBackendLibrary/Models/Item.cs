@@ -10,11 +10,11 @@ namespace ShopBackendLibrary.Models
     public class Item
     {
         [Key]
-        public Guid ItemId { get; set; }
-        public Guid CategoryId { get; set; }
-        public string ItemName { get; set; }
-        public string ItemDescription { get; set; }
-        public decimal ItemPrice { get; set; }
+        public Guid ItemID { get; set; }
+        public int CategoryID { get; set; }
+        public string? ItemName { get; set; }
+        public string? ItemDescription { get; set; }
+        public decimal? ItemPrice { get; set; }
 
     }
 }

@@ -21,7 +21,7 @@ else
         </TemplateColumn> *@
 
         <TemplateColumn Title="View">
-            <button class="btn btn-primary" onclick="@(() => ViewItem(context.ItemId))">View</button>
+            <button class="btn btn-primary" onclick="@(() => ViewItem(context.ItemID))">View</button>
         </TemplateColumn>
         <PropertyColumn Property="i => i.ItemName" Sortable="true"/>
         <PropertyColumn Property="i => i.ItemDescription" Sortable="true"/>

@@ -34,5 +34,23 @@ namespace ShopBackendLibrary.SqlDataAccess
             }
             return null;
         }
+
+        public async Task SaveData(string storedProc, string connectionName, object parameters)
+        {
+            try
+            {
+                string connectionString = _config.GetConnectionString(connectionName)
+                    ?? throw new Exception($"Missing connection string at {connectionName}");
+                using var connection = new SqlConnection(connectionString);
+                await connection.ExecuteAsync(
+                    storedProc,
+                    parameters,
+                    commandType: System.Data.CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Save Data Exception: " + ex.Message);
+            }
+        }
     }
 }
