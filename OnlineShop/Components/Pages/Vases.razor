@@ -1,4 +1,4 @@
-﻿@page "/inventory/"
+﻿@page "/vases/"
 @inject NavigationManager NavManager
 @inject ISqlDataAccess sql
 @using ShopBackendLibrary.SqlDataAccess
@@ -6,44 +6,46 @@
 @using ShopBackendLibrary
 @using ShopBackendLibrary.Models
 @rendermode InteractiveServer
-<h3>Inventory</h3>
 
 @if (items is null)
 {
     <p><em>Loading...</em></p>
 }
 else
-{ 
+{
     <QuickGrid Items="items.AsQueryable()" Pagination="pagination">
 
-@*         <TemplateColumn Title="Edit">
-            <button class="btn btn-primary" onclick="@(() => EditProperty(context.PropertyId))">Edit</button>
-        </TemplateColumn> *@
+        @*         <TemplateColumn Title="Edit">
+    <button class="btn btn-primary" onclick="@(() => EditProperty(context.PropertyId))">Edit</button>
+    </TemplateColumn> *@
 
         <TemplateColumn Title="View">
             <button class="btn btn-primary" onclick="@(() => ViewItem(context.ItemID))">View</button>
         </TemplateColumn>
-        <PropertyColumn Property="i => i.ItemName" Sortable="true"/>
-        <PropertyColumn Property="i => i.ItemDescription" Sortable="true"/>
-        <PropertyColumn Property="i => i.ItemPrice" Sortable="true"/>
+        <PropertyColumn Property="i => i.ItemName" Sortable="true" />
+        <PropertyColumn Property="i => i.ItemDescription" Sortable="true" />
+        <PropertyColumn Property="i => i.ItemPrice" Sortable="true" />
         <PropertyColumn Property="i => i.CategoryID" Sortable="true" />
-        
+
     </QuickGrid>
     <Paginator State="@pagination" />
 }
 @code {
     PaginationState pagination = new PaginationState { ItemsPerPage = 12 };
     private List<Item> items = new();
+    int category = 1;
+
     protected override async Task OnInitializedAsync()
     {
+       
         await LoadItems();
     }
     private async Task LoadItems()
     {
-        items = await sql.LoadData<Item>("dbo.GetAllItems", "Default", null);
+        items = await sql.LoadCategoryItems<Item>("dbo.GetItemsInCategory", "Default", category);
     }
     private async Task ViewItem(Guid ItemId)
     {
-        
+
     }
 }

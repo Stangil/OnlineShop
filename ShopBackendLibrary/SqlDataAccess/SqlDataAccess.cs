@@ -35,6 +35,27 @@ namespace ShopBackendLibrary.SqlDataAccess
             return null;
         }
 
+        public async Task<List<T>> LoadCategoryItems<T>(string storedProc, string connectionName, int parameter)
+        {
+            try
+            {
+                string connectionString = _config.GetConnectionString(connectionName)
+                    ?? throw new Exception($"Missing connection string at {connectionName}");
+                using var connection = new SqlConnection(connectionString);
+                var rows = await connection.QueryAsync<T>(
+                    storedProc,
+                    parameter,
+                    commandType: System.Data.CommandType.StoredProcedure
+                    );
+                return rows.ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+        }
+
         public async Task SaveData(string storedProc, string connectionName, object parameters)
         {
             try
