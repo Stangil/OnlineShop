@@ -1,16 +1,53 @@
 ﻿@page "/newitem/"
+@inject NavigationManager NavManager
+@inject ISqlDataAccess sql
+@using ShopBackendLibrary.SqlDataAccess
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using ShopBackendLibrary
+@using ShopBackendLibrary.Models
+@rendermode InteractiveServer
 
-<div class="table">
-    <form>
-        <label style="width: 100px" for="itemName">Item Name</label>
-        <input id="itemName" style="width: 380px" @bind-value="itemName" />
-        <label style="width: 100px" for="itemDescription">Item Description</label>
-        <input id="itemDescription" style="width: 380px" @bind-value="itemDescription" />
-    </form>
-</div>
+<table>
+    <tr>
+        <td width="100">Name</td>
+        <td><input id="itemName" style="width: 380px" @bind-value="itemName" /></td>
+    </tr>
+    <tr>
+        <td width="100">Description</td>
+        <td><input id="itemDescription" style="width: 380px" @bind-value="itemDescription" /></td>
+    </tr>
+    <tr>
+        <td width="100">Price</td>
+        <td><input id="price" style="width: 380px" @bind-value="price" /></td>
+    </tr>
+</table>   
+    <div>
+        <button class="btn btn-primary" @onclick="SaveItem">Add</button> <button class="btn btn-primary" @onclick="Exit">Cancel</button>
+    </div>
+
 
 
 @code {
     string itemName = "", itemDescription = "";
+    int category;
+    private Item item = new();
+    decimal price;
 
+
+    protected override async Task OnInitializedAsync()
+    {               
+
+    }
+    private async Task SaveItem()
+    {
+        Console.WriteLine("Create Item");
+        item.CategoryID = category;
+        item.ItemName = itemName;
+        item.ItemDescription = itemDescription;
+        item.ItemPrice = price;
+    }
+    private void Exit()
+    {
+        //Navigate to home
+    }
 }
