@@ -33,19 +33,20 @@ else
 @code {
     PaginationState pagination = new PaginationState { ItemsPerPage = 12 };
     private List<Item> items = new();
+    private Item item = new();
     int category = 1;
 
     protected override async Task OnInitializedAsync()
     {
-       
+        item.CategoryID = category;
         await LoadItems();
     }
     private async Task LoadItems()
     {
-        items = await sql.LoadCategoryItems<Item>("dbo.GetItemsInCategory", "Default", category);
+        items = await sql.LoadCategoryItems<Item>("dbo.GetItemsInCategory", "Default", 1);
     }
     private async Task ViewItem(Guid ItemId)
     {
-
+        //Navigate to Item view page
     }
 }

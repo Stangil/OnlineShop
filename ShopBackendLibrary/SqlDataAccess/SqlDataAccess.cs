@@ -3,6 +3,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using ShopBackendLibrary.Models;
+using System.Reflection.Metadata;
 
 namespace ShopBackendLibrary.SqlDataAccess
 {
@@ -42,9 +43,11 @@ namespace ShopBackendLibrary.SqlDataAccess
                 string connectionString = _config.GetConnectionString(connectionName)
                     ?? throw new Exception($"Missing connection string at {connectionName}");
                 using var connection = new SqlConnection(connectionString);
+                var dic = new Dictionary<string, object> { { "@CategoryID", parameter } };
+                var parameters = new DynamicParameters(dic);
                 var rows = await connection.QueryAsync<T>(
                     storedProc,
-                    parameter,
+                    parameters,
                     commandType: System.Data.CommandType.StoredProcedure
                     );
                 return rows.ToList();
