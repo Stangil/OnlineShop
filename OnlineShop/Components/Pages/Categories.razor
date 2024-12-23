@@ -1,4 +1,4 @@
-﻿@page "/figures/"
+﻿@page "/categories/{Value:int}"
 @inject NavigationManager NavManager
 @inject ISqlDataAccess sql
 @using ShopBackendLibrary.SqlDataAccess
@@ -31,14 +31,16 @@ else
     <Paginator State="@pagination" />
 }
 @code {
+    [Parameter]
+    public int Value { get; set; }
     PaginationState pagination = new PaginationState { ItemsPerPage = 12 };
     private List<Item> items = new();
     private Item item = new();
-    int category = 2;
+
 
     protected override async Task OnInitializedAsync()
     {
-        item.CategoryID = category;
+        item.CategoryID = Value;
         await LoadItems();
     }
     private async Task LoadItems()
