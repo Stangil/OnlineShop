@@ -1,34 +1,35 @@
 ﻿@page "/newitem/"
 @inject NavigationManager NavManager
 @inject ISqlDataAccess sql
+@inject IConfiguration config
 @using ShopBackendLibrary.SqlDataAccess
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using ShopBackendLibrary
 @using ShopBackendLibrary.Models
 @rendermode InteractiveServer
 
-<table class="">
+<table class="table">
     <tr>
         <td>
-            <label style="width: 80px" for="itemName">Name</label>
+            <label style="width: 90px" for="itemName">Name</label>
             <input id="itemName" style="width: 380px" @bind-value="itemName" />
         </td>
     </tr>
     <tr>
         <td>
-            <label style="width: 80px" for="itemDescription">Description</label>
+            <label style="width: 90px" for="itemDescription">Description</label>
             <input id="itemDescription" style="width: 380px" @bind-value="itemDescription" />
         </td>
     </tr>
     <tr>
         <td>
-            <label style="width: 80px" for="price">Price</label>
+            <label style="width: 90px" for="price">Price</label>
             <input id="price" style="width: 380px" @bind-value="price" />
         </td>
     </tr>
     <tr>
         <td>
-            <label style="width: 80px" for="category">Category</label>
+            <label style="width: 90px" for="category">Category</label>
             <InputSelect class="select-element" @bind-Value:get="category">
                 @if (selected is null)
                 {
@@ -41,7 +42,9 @@
             </InputSelect>
         </td>
     </tr>
-</table>   
+</table>  
+
+
     <div>
         <button class="btn btn-primary" @onclick="SaveItem">Add</button> <button class="btn btn-primary" @onclick="Exit">Cancel</button>
     </div>
@@ -52,10 +55,14 @@
     string itemName = "", itemDescription = "";
     private string selected = null!;
     int category;
+    private long maxFileSize = 1024 * 1024 * 5;//5 Mb
     private Item item = new();
     decimal price;
     private List<Category> categories = new();
-
+    private List<Picture> pictures = new();
+    private List<string> errors = new();
+    private int maxAllowedFiles = 5;//TODO put in appsettings?
+    private string relativePath = "";
     protected override async Task OnInitializedAsync()
     {
         GetCategories();
@@ -86,8 +93,10 @@
         item.ItemPrice = price;
         item.ItemID = itemID;
         await sql.SaveData("dbo.spCreateItem", "Default", item);
-        NavManager.NavigateTo($"/Inventory");
+        NavManager.NavigateTo($"/AddPictures/{itemID}");
     }
+
+   
     private void Exit()
     {
         NavManager.NavigateTo($"/Inventory");

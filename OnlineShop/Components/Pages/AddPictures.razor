@@ -1,0 +1,93 @@
+﻿@page "/addpictures/{Value:guid}"
+@using ShopBackendLibrary.Models
+@using ShopBackendLibrary;
+@using ShopBackendLibrary.SqlDataAccess
+@inject NavigationManager navmanager
+@inject IConfiguration config
+@inject ISqlDataAccess sql
+@rendermode InteractiveServer
+
+<h5>Add Pictures</h5>
+<EditForm Model="pictures" OnValidSubmit="Submit">
+    <div>
+        <label for="pictures">Item Name</label>
+        <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
+    </div>
+    <button class="btn btn-primary mt-3" type="submit">Submit</button>
+</EditForm>
+@if (errors.Count > 0)
+{
+    <h2>Errors</h2>
+    <ul class="text-danger">
+        @foreach (var error in errors)
+        {
+            <li>@error</li>
+        }
+    </ul>
+}
+
+@code {
+    [Parameter]
+    public Guid Value { get; set; }
+    string itemName = "", itemDescription = "";
+    private string selected = null!;
+    int category;
+    private long maxFileSize = 1024 * 1024 * 5;//5 Mb
+    private Item item = new();
+    decimal price;
+    
+    private List<Picture> pictures = new();
+    private List<string> errors = new();
+    private int maxAllowedFiles = 5;//TODO put in appsettings?
+    private string relativePath = "";
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        errors.Clear();
+        if (e.FileCount > maxAllowedFiles)
+        {
+            errors.Add($"Error: Attempting to upload {e.FileCount} files but only {maxAllowedFiles} files are allowed");
+            // return null;
+        }
+        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+        {
+            try
+            {
+                string newFileName = Path.ChangeExtension(Path.GetRandomFileName(), Path.GetExtension(file.Name));
+                string path = Path.Combine(config.GetValue<string>("Path:ImageSavePath")!, $"Item{Value}", newFileName);
+                relativePath = Path.Combine($"Item{item.ItemName}", newFileName);
+                Directory.CreateDirectory(Path.Combine(config.GetValue<string>("Path:ImageSavePath")!, $"Item{Value}"));
+                //var authState = await authenticationStateTask;
+                //userName = authState.User.Claims.FirstOrDefault().Value;
+                await using FileStream fs = new(path, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+
+                pictures.Add(new Picture
+                    {
+                        ItemPictureID = Guid.NewGuid(),
+                        ItemID = Value,
+                        ImagePath = relativePath
+                    });
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"File: {file.Name} Error: {ex.Message}");
+            }
+        }
+    }
+    private async Task Submit()
+    {
+        try
+        {
+            foreach (var picture in pictures)
+            {
+                await sql.SaveData("dbo.spNewImage", "Default", picture);
+            }
+            errors.Clear();
+            navmanager.NavigateTo($"/");
+        }
+        catch (Exception ex)
+        {
+            errors.Add($"Error: {ex.Message}");
+        }
+    }
+}

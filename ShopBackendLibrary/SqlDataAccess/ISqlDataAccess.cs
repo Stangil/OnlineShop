@@ -9,6 +9,7 @@ namespace ShopBackendLibrary.SqlDataAccess
 {
     public interface ISqlDataAccess
     {
+        Task<Item> LoadItem(string storedProc, string connectionName, Guid parameter);
         Task<List<T>> LoadCategoryItems<T>(string storedProc, string connectionName, int parameter);
         Task<List<T>> LoadData<T>(string storedProc, string connectionName, object parameters);
         Task SaveData(string storedProc, string connectionName, object parameters);
