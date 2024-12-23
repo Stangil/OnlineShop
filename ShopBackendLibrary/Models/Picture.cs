@@ -8,9 +8,8 @@ namespace ShopBackendLibrary.Models
 {
     public class Picture
     {
-        public Guid ItemPictureID { get; set; }
+        public Guid PictureID { get; set; }
         public Guid ItemID { get; set; }
-        public string? ImagePath { get; set; } = string.Empty;
-        public string? CreatedBy { get; set; } = string.Empty;
+        public string? ImagePath { get; set; } = string.Empty; 
     }
 }
