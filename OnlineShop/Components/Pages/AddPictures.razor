@@ -54,7 +54,7 @@
             {
                 string newFileName = Path.ChangeExtension(Path.GetRandomFileName(), Path.GetExtension(file.Name));
                 string path = Path.Combine(config.GetValue<string>("Path:ImageSavePath")!, $"Item{Value}", newFileName);
-                relativePath = Path.Combine($"Item{item.ItemName}", newFileName);
+                relativePath = Path.Combine($"Item{Value}", newFileName);
                 Directory.CreateDirectory(Path.Combine(config.GetValue<string>("Path:ImageSavePath")!, $"Item{Value}"));
                 //var authState = await authenticationStateTask;
                 //userName = authState.User.Claims.FirstOrDefault().Value;

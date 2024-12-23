@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using ShopBackendLibrary
 @using ShopBackendLibrary.Models
+@inject IConfiguration config
 @rendermode InteractiveServer
 
 <table class="table">
@@ -42,22 +43,41 @@
         </td>
     </tr> *@
 </table>
-
+<h3>Pictures</h3>
+<div>
+    @if (pictures is not null)
+    {
+        <p>
+            @foreach (var picture in pictures)
+            {
+                <img src="@ShowImage(picture.ImagePath)" style="height: 200px; padding: 10px" />
+            }
+            
+        </p>
+    }
+</div>
 
 @code {
     [Parameter]
     public Guid Value { get; set; } 
-    string? itemName = "", itemDescription = "";
+    string? itemName = "", itemDescription = "", imageUrl = "", image = "", path = "";
     private string selected = null!;
     int category;
     private Item item = new();
     decimal? price;
     private List<Category> categories = new();
+    private List<Picture>? pictures;
+    private Picture pic = new();
 
     protected override async Task OnInitializedAsync()
     {
         await GetItem();
-        GetCategories();
+        await GetCategories();
+        imageUrl = config["Path:ImagePath"]!;
+        pic.ItemID = Value;
+        pic.ImagePath = imageUrl;
+
+        await LoadPictures();
     }
 
     private async Task GetItem()
@@ -68,11 +88,20 @@
         price = item.ItemPrice;
     }
 
-    private async void GetCategories()
+    private async Task GetCategories()
     {
-        categories = await sql.LoadData<Category>("dbo.GetAllCatagories", "Default", null);
+        //categories = await sql.LoadData<Category>("dbo.GetAllCatagories", "Default", null);
     }
-
+    private async Task LoadPictures()
+    {
+        pictures = await sql.LoadData<Picture>(
+            "dbo.spGetPictures", "Default", pic
+        );
+    }
+    private string ShowImage(string id)
+    {
+        return $"{imageUrl}{id}";
+    }
 
     // private async Task SaveItem()
     // {
