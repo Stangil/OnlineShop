@@ -1,0 +1,104 @@
+﻿@page "/newuser/"
+@using ShopBackendLibrary
+@using ShopBackendLibrary.Models
+@using ShopBackendLibrary.SqlDataAccess
+@inject NavigationManager NavManager
+@inject ISqlDataAccess sql
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+<PageTitle>New User</PageTitle>
+<h3>New User</h3>
+
+<div class="table">
+    <table>
+        <tr>
+            <td>
+                <label style="width: 100px" for="firstname">First Name</label>
+                <input id="vin" style="width: 380px" @bind-value="firstname" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label style="width: 100px" for="lastname">Last Name</label>
+                <input id="lastname" style="width: 380px" @bind-value="lastname" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label style="width: 100px" for="userName">User Name</label>
+                <input id="userName" style="width: 380px" @bind-value="userName" placeholder="ex:JSMith" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label style="width: 100px" for="password">Password</label>
+                <input id="password" style="width: 380px" @bind-value="password" placeholder="Password" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label style="width: 100px" for="email">Email</label>
+                <input id="email" style="width: 380px" @bind-value="email" placeholder="Email" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label style="width: 80px" for="adminRole">Admin</label>
+                <input type="checkbox" id="adminRole" style="width: 10px" @bind="adminRole" />
+            </td>
+           
+            <td>
+                <label style="width: 80px" for="userRole">User</label>
+                <input type="checkbox" id="userRole" style="width: 10px" @bind="userRole" />
+            </td>
+        </tr>
+    </table>
+    <div>
+        <button class="btn btn-primary" @onclick="SaveUser">Submit</button>
+    </div>
+</div>
+
+
+
+@code {
+
+    [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; }
+    string firstname = "", lastname = "", createdBy = "", userName = "", password = "", role = "", email="";
+    bool adminRole = false, userRole = false;
+    // List<Role> userRoles = new List<Role>();
+    // List<Role> roles = new();
+    // private UserRoleXfer userRoleXfer = new();
+    private User user = new();
+    protected override async Task OnInitializedAsync()
+    {
+        //roles = await sql.LoadData<Role>("dbo.spGetRoles", "Default", null);//Gets list of roles from Db
+    }
+
+    private async Task SaveUser()
+    {
+        var authState = await authenticationStateTask;
+
+        createdBy = authState.User.Claims.FirstOrDefault().Value;
+        if(adminRole == true)
+        {
+            role = "Admin";
+        }
+        else
+        {
+            role = "User";
+        }
+        user.UserId = Guid.NewGuid();
+        user.Password = password;
+        user.FirstName = firstname;
+        user.LastName = lastname;
+        user.CreatedBy = createdBy;
+        user.LastUpdatedBy = createdBy;
+        user.UserName = userName;        
+        user.Email = email;
+        user.Role = role;
+        
+        await sql.SaveData("dbo.spCreateUser", "Default", user);
+        NavManager.NavigateTo($"/");
+    }
+}

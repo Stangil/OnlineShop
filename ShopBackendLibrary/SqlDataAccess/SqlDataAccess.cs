@@ -100,28 +100,25 @@ namespace ShopBackendLibrary.SqlDataAccess
             return null;
         }
 
-        //public async Task<Property> LoadProperty(string storedProc, string connectionName, Guid parameter)
-        //{
-        //    try
-        //    {
-        //        string connectionString = _config.GetConnectionString(connectionName)
-        //   ?? throw new Exception($"Missing connection string at {connectionName}");
-        //        using var connection = new SqlConnection(connectionString);
-        //        var dic = new Dictionary<string, object> { { "@PropertyID", parameter } };
-        //        var parameters = new DynamicParameters(dic);
-        //        var property = await connection.QueryAsync<Property>(
-        //            storedProc,
-        //            parameters,
-        //            commandType: System.Data.CommandType.StoredProcedure
-        //            );
-        //        return property.FirstOrDefault();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //    }
-        //    return null;
-        //}
-
+        public async Task<UserPassword> LoadUserPassword(string storedProc, string connectionName, object parameters)
+        {
+            try
+            {
+                string connectionString = _config.GetConnectionString(connectionName)
+            ?? throw new Exception($"Missing connection string at {connectionName}");
+                using var connection = new SqlConnection(connectionString);
+                var item = await connection.QueryAsync<UserPassword>(
+                    storedProc,
+                    parameters,
+                    commandType: System.Data.CommandType.StoredProcedure
+                    );
+                return item.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+        }
     }
 }

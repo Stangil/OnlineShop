@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ShopBackendLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace ShopBackendLibrary.Data
         {
 
         }
+        public DbSet<User> Users { get; set; }
     }
 }

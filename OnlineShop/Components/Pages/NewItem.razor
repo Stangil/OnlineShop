@@ -29,6 +29,12 @@
     </tr>
     <tr>
         <td>
+            <label style="width: 90px" for="inStock"># In Stock</label>
+            <input id="inStock" style="width: 380px" @bind-value="inStock" />
+        </td>
+    </tr>
+    <tr>
+        <td>
             <label style="width: 90px" for="category">Category</label>
             <InputSelect class="select-element" @bind-Value:get="category">
                 @if (selected is null)
@@ -61,7 +67,7 @@
     private List<Category> categories = new();
     private List<Picture> pictures = new();
     private List<string> errors = new();
-    private int maxAllowedFiles = 5;//TODO put in appsettings?
+    private int maxAllowedFiles = 5, inStock;//TODO put in appsettings?
     private string relativePath = "";
     protected override async Task OnInitializedAsync()
     {
@@ -92,6 +98,7 @@
         item.ItemDescription = itemDescription;
         item.ItemPrice = price;
         item.ItemID = itemID;
+        item.InStock = inStock;
         await sql.SaveData("dbo.spCreateItem", "Default", item);
         NavManager.NavigateTo($"/AddPictures/{itemID}");
     }

@@ -27,6 +27,12 @@
             <input id="price" readonly style="width: 380px" @bind-value="price" />
         </td>
     </tr>
+    <tr>
+        <td>
+            <label style="width: 90px" for="inStock"># In Stock</label>
+            <input id="inStock" readonly style="width: 380px" @bind-value="inStock" />
+        </td>
+    </tr>
     @* <tr>
         <td>
             <label style="width: 80px" for="category">Category</label>
@@ -62,7 +68,7 @@
     public Guid Value { get; set; } 
     string? itemName = "", itemDescription = "", imageUrl = "", image = "", path = "";
     private string selected = null!;
-    int category;
+    int category, inStock;
     private Item item = new();
     decimal? price;
     private List<Category> categories = new();
@@ -86,6 +92,7 @@
         itemName = item.ItemName;
         itemDescription = item.ItemDescription;
         price = item.ItemPrice;
+        inStock = item.InStock;
     }
 
     private async Task GetCategories()

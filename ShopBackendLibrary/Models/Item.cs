@@ -15,6 +15,7 @@ namespace ShopBackendLibrary.Models
         public string? ItemName { get; set; }
         public string? ItemDescription { get; set; }
         public decimal? ItemPrice { get; set; }
+        public int InStock { get; set; }
 
     }
 }

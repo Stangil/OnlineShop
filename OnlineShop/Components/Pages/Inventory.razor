@@ -1,4 +1,4 @@
-﻿@page "/inventory/"
+﻿@page "/"
 @inject NavigationManager NavManager
 @inject ISqlDataAccess sql
 @using ShopBackendLibrary.SqlDataAccess
@@ -15,7 +15,7 @@
 else
 { 
     <QuickGrid Items="items.AsQueryable()" Pagination="pagination">
-
+       
 @*         <TemplateColumn Title="Edit">
             <button class="btn btn-primary" onclick="@(() => EditProperty(context.PropertyId))">Edit</button>
         </TemplateColumn> *@
@@ -23,10 +23,19 @@ else
         <TemplateColumn Title="View">
             <button class="btn btn-primary" onclick="@(() => ViewItem(context.ItemID))">View</button>
         </TemplateColumn>
-        <PropertyColumn Property="i => i.ItemName" Sortable="true"/>
-        <PropertyColumn Property="i => i.ItemDescription" Sortable="true"/>
-        <PropertyColumn Property="i => i.ItemPrice" Sortable="true"/>
-        <PropertyColumn Property="i => i.CategoryID" Sortable="true" />
+        <TemplateColumn Title="Edit">
+            @* <AuthorizeView> *@
+                
+                    <button class="btn btn-primary" onclick="@(() => EditItem(context.ItemID))">View</button>
+                
+            @* </AuthorizeView> *@
+            
+        </TemplateColumn>
+        <PropertyColumn Title="Item Name" Property="i => i.ItemName" Sortable="true"/>
+        <PropertyColumn Title="Item Description" Property="i => i.ItemDescription" Sortable="true" />
+        <PropertyColumn Title="Item Price" Property="i => i.ItemPrice" Sortable="true" />
+        <PropertyColumn Title="Category ID" Property="i => i.CategoryID" Sortable="true" />
+        <PropertyColumn Title="# In Stock" Property="i => i.InStock" Sortable="true" />
         
     </QuickGrid>
     <Paginator State="@pagination" />
@@ -45,5 +54,9 @@ else
     private async Task ViewItem(Guid ItemId)
     {
         NavManager.NavigateTo($"/viewitem/{ItemId}");
+    }
+    private async Task EditItem(Guid ItemId)
+    {
+        
     }
 }
