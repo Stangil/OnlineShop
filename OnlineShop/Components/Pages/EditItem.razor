@@ -18,36 +18,39 @@
     <tr>
         <td>
             <label style="width: 90px" for="itemDescription">Description</label>
-            <input id="itemDescription" readonly style="width: 380px" @bind-value="itemDescription" />
+            <input id="itemDescription" style="width: 380px" @bind-value="itemDescription" />
         </td>
     </tr>
     <tr>
         <td>
             <label style="width: 90px" for="price">Price</label>
-            <input id="price" readonly style="width: 380px" @bind-value="price" />
+            <input id="price" style="width: 380px" @bind-value="price" />
         </td>
     </tr>
     <tr>
         <td>
             <label style="width: 90px" for="inStock"># In Stock</label>
-            <input id="inStock" readonly style="width: 380px" @bind-value="inStock" />
+            <input id="inStock" style="width: 380px" @bind-value="inStock" />
         </td>
     </tr>
-    @* <tr>
-    <td>
-    <label style="width: 80px" for="category">Category</label>
-    <InputSelect class="select-element" @bind-Value:get="category">
-    @if (selected is null)
-    {
-    <option selected value="">-Select Category-</option>
-    }
-    @foreach (Category category in categories)
-    {
-    <option value="@category.CategoryID">@category.CategoryName</option>
-    }
-    </InputSelect>
-    </td>
-    </tr> *@
+    <tr>
+        <td>
+            <label style="width: 90px" for="category">Category</label>
+            <InputSelect class="select-element" @bind-Value:get="category">
+                @if (selected is null)
+                {
+                    <option selected value="">-Select Category-</option>
+                }
+                @foreach (Category category in categories)
+                {
+                    <option value="@category.CategoryID">@category.CategoryName</option>
+                }
+            </InputSelect>
+        </td>
+    </tr>
+    <div>
+        <button class="btn btn-primary" @onclick="SaveItem">Save</button> <button class="btn btn-primary" @onclick="Exit">Cancel</button>
+    </div>
 </table>
 <h5>Pictures</h5>
 <div>
@@ -77,8 +80,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await GetItem();
         await GetCategories();
+        await GetItem();
+        
         imageUrl = config["Path:ImagePath"]!;
         pic.ItemID = Value;
         pic.ImagePath = imageUrl;
@@ -97,7 +101,7 @@
 
     private async Task GetCategories()
     {
-        //categories = await sql.LoadData<Category>("dbo.GetAllCatagories", "Default", null);
+        categories = await sql.LoadData<Category>("dbo.GetAllCategories", "Default", null);
     }
     private async Task LoadPictures()
     {
@@ -110,24 +114,26 @@
         return $"{imageUrl}{id}";
     }
 
-    // private async Task SaveItem()
-    // {
+    private async Task SaveItem()
+    {
 
-    //     // var authState = await authenticationStateTask;
-    //     // createdBy = authState.User.Claims.FirstOrDefault().Value;
-    //     Guid itemID = Guid.NewGuid();
+        // var authState = await authenticationStateTask;
+        // createdBy = authState.User.Claims.FirstOrDefault().Value;
+        Guid itemID = Value;
 
-    //     Console.WriteLine("Create Item");
-    //     item.CategoryID = category;
-    //     item.ItemName = itemName;
-    //     item.ItemDescription = itemDescription;
-    //     item.ItemPrice = price;
-    //     item.ItemID = itemID;
-    //     await sql.SaveData("dbo.spCreateItem", "Default", item);
-    //     NavManager.NavigateTo($"/Inventory");
-    // }
+        Console.WriteLine("Create Item");
+        item.CategoryID = category;
+        item.ItemName = itemName;
+        item.ItemDescription = itemDescription;
+        item.ItemPrice = price;
+        item.ItemID = itemID;
+        item.InStock = inStock;
+        //Make Update stored Proc
+        await sql.SaveData("dbo.spUpDateItem", "Default", item);
+        NavManager.NavigateTo($"/");
+    }
     private void Exit()
     {
-        NavManager.NavigateTo($"/Inventory");
+        NavManager.NavigateTo($"/");
     }
 }
