@@ -54,6 +54,9 @@
 </table>
 <h5>Pictures</h5>
 <div>
+    <button class="btn btn-primary" @onclick="AddPics">Add Pictures</button>
+</div>
+<div>
     @if (pictures is not null)
     {
         <p>
@@ -82,7 +85,7 @@
     {
         await GetCategories();
         await GetItem();
-        
+
         imageUrl = config["Path:ImagePath"]!;
         pic.ItemID = Value;
         pic.ImagePath = imageUrl;
@@ -113,7 +116,10 @@
     {
         return $"{imageUrl}{id}";
     }
-
+    private void AddPics()
+    {
+        NavManager.NavigateTo($"/addpictures/{Value}");
+    }
     private async Task SaveItem()
     {
 
