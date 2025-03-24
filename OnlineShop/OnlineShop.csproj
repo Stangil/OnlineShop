@@ -24,4 +24,10 @@
     <ProjectReference Include="..\ShopBackendLibrary\ShopBackendLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Components\Pages\Inventory - Copy.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,4 @@
-﻿@page "/Inventory"
+﻿@page "/"
 @inject NavigationManager NavManager
 @inject ISqlDataAccess sql
 @using ShopBackendLibrary.SqlDataAccess
@@ -6,9 +6,9 @@
 @using ShopBackendLibrary
 @using ShopBackendLibrary.Models
 @rendermode InteractiveServer
-<h3>Under Construction</h3>
+<h3>Landing Page</h3>
 
-@* 
+
 @if (items is null)
 {
     <p><em>Loading...</em></p>
@@ -28,16 +28,16 @@ else
                 </Authorized>
             </AuthorizeView>
         </TemplateColumn>
-       
+
         <PropertyColumn Title="Item Name" Property="i => i.ItemName" Sortable="true"/>
         <PropertyColumn Title="Item Description" Property="i => i.ItemDescription" Sortable="true" />
         <PropertyColumn Title="Item Price" Property="i => i.ItemPrice" Sortable="true" />
         <PropertyColumn Title="Category ID" Property="i => i.CategoryID" Sortable="true" />
         <PropertyColumn Title="# In Stock" Property="i => i.InStock" Sortable="true" />
-        
+
     </QuickGrid>
     <Paginator State="@pagination" />
-} *@
+}
 @code {
     PaginationState pagination = new PaginationState { ItemsPerPage = 12 };
     private List<Item> items = new();
